@@ -337,24 +337,50 @@ bool test_mining(bool validate, int bfactor, int workers_per_hash, bool fast_fp,
 
 	printf("%zu MB free GPU memory left\n", free_mem >> 20);
 
-	for (const void* p : { init_vm<2>, init_vm<4>, init_vm<8>, init_vm<16> })
+        //! this could almost certainly be done better because fuck you
 	{
-		cudaStatus = cudaFuncSetCacheConfig(p, cudaFuncCachePreferShared);
-		if (cudaStatus != cudaSuccess)
-		{
-			fprintf(stderr, "Failed to set cache config for init_vm!\n");
-			return false;
-		}
-	}
+                auto p0 = init_vm<2>;
+                auto p1 = init_vm<4>;
+                auto p2 = init_vm<8>;
+                auto p3 = init_vm<16>;
+                cudaStatus = cudaFuncSetCacheConfig(p0, cudaFuncCachePreferShared);
+                if (cudaStatus != cudaSuccess) return false;
+                cudaStatus = cudaFuncSetCacheConfig(p1, cudaFuncCachePreferShared);
+                if (cudaStatus != cudaSuccess) return false;
+                cudaStatus = cudaFuncSetCacheConfig(p2, cudaFuncCachePreferShared);
+                if (cudaStatus != cudaSuccess) return false;
+                cudaStatus = cudaFuncSetCacheConfig(p3, cudaFuncCachePreferShared);
+                if (cudaStatus != cudaSuccess) return false;
 
-	for (const void* p : { execute_vm<2, false>, execute_vm<4, false>, execute_vm<8, false>, execute_vm<16, false>, execute_vm<2, true>, execute_vm<4, true>, execute_vm<8, true>, execute_vm<16, true> })
-	{
-		cudaStatus = cudaFuncSetCacheConfig(p, cudaFuncCachePreferShared);
-		if (cudaStatus != cudaSuccess)
-		{
-			fprintf(stderr, "Failed to set cache config for execute_vm!\n");
-			return false;
-		}
+        }
+
+        //! howto destructioning of the scope??
+        {
+                auto p0 = execute_vm<2, false>;
+                auto p1 = execute_vm<4, false>;
+                auto p2 = execute_vm<8, false>;
+                auto p3 = execute_vm<16, false>;
+                auto p4 = execute_vm<2, true>;
+                auto p5 = execute_vm<4, true>;
+                auto p6 = execute_vm<8, true>;
+                auto p7 = execute_vm<16, true>;
+
+                cudaStatus = cudaFuncSetCacheConfig(p0, cudaFuncCachePreferShared);
+                if (cudaStatus != cudaSuccess) return false;
+                cudaStatus = cudaFuncSetCacheConfig(p1, cudaFuncCachePreferShared);
+                if (cudaStatus != cudaSuccess) return false;
+                cudaStatus = cudaFuncSetCacheConfig(p2, cudaFuncCachePreferShared);
+                if (cudaStatus != cudaSuccess) return false;
+                cudaStatus = cudaFuncSetCacheConfig(p3, cudaFuncCachePreferShared);
+                if (cudaStatus != cudaSuccess) return false;
+                cudaStatus = cudaFuncSetCacheConfig(p4, cudaFuncCachePreferShared);
+                if (cudaStatus != cudaSuccess) return false;
+                cudaStatus = cudaFuncSetCacheConfig(p5, cudaFuncCachePreferShared);
+                if (cudaStatus != cudaSuccess) return false;
+                cudaStatus = cudaFuncSetCacheConfig(p6, cudaFuncCachePreferShared);
+                if (cudaStatus != cudaSuccess) return false;
+                cudaStatus = cudaFuncSetCacheConfig(p7, cudaFuncCachePreferShared);
+                if (cudaStatus != cudaSuccess) return false;
 	}
 
 	auto prev_time = high_resolution_clock::now();
