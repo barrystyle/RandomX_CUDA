@@ -220,7 +220,8 @@ bool test_mining(bool validate, int bfactor, int workers_per_hash, bool fast_fp,
 	randomx_dataset *myDataset;
 	bool large_pages_available = true;
 	{
-		const char mySeed[] = "RandomX example seed";
+		//const char mySeed[] = "RandomX example seed";
+                char mySeed[32] = { 0 };
 
 		randomx_cache *myCache = randomx_alloc_cache((randomx_flags)(RANDOMX_FLAG_JIT));
 		randomx_init_cache(myCache, mySeed, sizeof mySeed);
